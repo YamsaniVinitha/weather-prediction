@@ -1,0 +1,9 @@
+open-weather-api:
+  url: https://api.openweathermap.org/data/2.5/forecast?q=%s&appid=%s&cnt=%s
+  api-key: ${OPEN_WEATHER_API_KEY}
+  cnt: 32 # 8(data points for each date)*3=24 for 3 days and another 8 as buffer as we exclude today's data
+
+weather:
+  api:
+    mode: LIVE
+    days: 3

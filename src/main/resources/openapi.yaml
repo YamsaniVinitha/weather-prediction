@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: weather-prediction
+  version: 1.0.0
+  description: 'This API is responsible for weather prediction for a given city.'
+  contact:
+    name: Publicis Sapient
+  license:
+    name: Publicis Sapient
+paths:
+  '/weather':
+    get:
+      tags:
+        - Weather
+      parameters:
+        - name: city
+          in: query
+          description: Operating company's unique identifier.
+          required: true
+          schema:
+            type: string
+            example: "BEL-CEBEO"
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherResponse'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                input error:
+                  value:
+                    code: INPUT_ERROR
+                    message: The city name is not valid.
+          description: Bad request
+        '404':
+            content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+                  examples:
+                    not found error:
+                      value:
+                        code: CITY_NOT_FOUND
+                        message: The city was not found.
+            description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                technical failure:
+                  value:
+                    code: TECHNICAL_FAILURE
+                    message: An error occurred while fetching the weather details.
+          description: Not found
+      operationId: getWeatherPrediction
+      summary: Get weather prediction
+      description: This API is used to get the weather prediction for a given city.
+
+components:
+    schemas:
+        WeatherResponse:
+          type: object
+          properties:
+            city:
+              type: string
+              description: Name of the city
+              example: "London"
+            weatherDetails:
+              type: array
+              items:
+                $ref: '#/components/schemas/WeatherDetails'
+          description: Weather prediction response
+        WeatherDetails:
+            type: object
+            description: Weather prediction response
+            properties:
+              date:
+                  type: string
+                  format: date
+                  description: Name of the city
+                  example: "2023-10-01"
+              temperature:
+                  type: object
+                  properties:
+                      min:
+                          type: number
+                          format: float
+                          description: Minimum temperature in Celsius
+                          example: 10.0
+                      max:
+                          type: number
+                          format: float
+                          description: Maximum temperature in Celsius
+                          example: 20.0
+                  description: Temperature in Celsius
+              instructions:
+                  type: string
+                  description: Weather instructions
+                  example: "Carry an umbrella"
+
+        ErrorResponse:
+          title: Error
+          description: Describe the error response format
+          required:
+            - code
+            - message
+          type: object
+          properties:
+            code:
+              description: Error code
+              type: string
+              enum:
+                - UNAUTHORIZED
+                - FORBIDDEN
+                - INPUT_ERROR
+                - CITY_NOT_FOUND
+                - TECHNICAL_FAILURE
+              example: INPUT_ERROR
+            message:
+              description: The error message
+              type: string
+              example: "Invalid JSON payload received"
+          example:
+            code: TECHNICAL_FAILURE
+            message: An error occurred while fetching the weather details
