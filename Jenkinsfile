@@ -24,5 +24,21 @@ pipeline {
               }
             }
         }
+        stage('Build Docker Image') {
+			steps {
+				script {
+					docker.build("weather-prediction:latest")
+                }
+			}
+		}
+		stage('Publish Docker Image') {
+			steps {
+				script {
+					docker.withRegistry('https://hub.docker.com/repositories/dockervinitha', 'dockervinitha') {
+						docker.image("weather-prediction:latest").push()
+                    }
+                }
+            }
+        }
     }
 }

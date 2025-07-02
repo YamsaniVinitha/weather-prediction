@@ -1,4 +1,4 @@
-# Use Java 17 as the base image
+# Use Java 21 as the base image
 FROM eclipse-temurin:21
 
 # Set the working directory
